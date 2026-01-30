@@ -20,6 +20,7 @@ let dy = 0;
 let score = 0;
 let gameOver = false;
 let speed = 10;
+let restartButtonArea = null; // zona donde se dibuja el botón
 
 /* ================= FONDO ARENA ================= */
 function drawBackground() {
@@ -90,9 +91,25 @@ function drawGameOverMenu() {
   ctx.fillStyle = "white";
   ctx.font = "40px Arial";
   ctx.textAlign = "center";
-  ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 20);
+  ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 40);
+
   ctx.font = "20px Arial";
-  ctx.fillText("Puntaje: " + score, canvas.width / 2, canvas.height / 2 + 10);
+  ctx.fillText("Puntaje: " + score, canvas.width / 2, canvas.height / 2 - 10);
+
+  // 🔘 BOTÓN DIBUJADO EN EL CANVAS
+  const btnWidth = 180;
+  const btnHeight = 40;
+  const btnX = canvas.width / 2 - btnWidth / 2;
+  const btnY = canvas.height / 2 + 20;
+
+  ctx.fillStyle = "#4CAF50";
+  ctx.fillRect(btnX, btnY, btnWidth, btnHeight);
+
+  ctx.fillStyle = "white";
+  ctx.font = "18px Arial";
+  ctx.fillText("VOLVER A JUGAR", canvas.width / 2, btnY + 25);
+
+  restartButtonArea = { x: btnX, y: btnY, w: btnWidth, h: btnHeight };
 }
 
 /* ================= RESET ================= */
@@ -179,6 +196,22 @@ document.addEventListener("keydown", (e) => {
     dy = 0;
   }
 });
+canvas.addEventListener("click", (e) => {
+  if (!gameOver || !restartButtonArea) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  if (
+    mouseX >= restartButtonArea.x &&
+    mouseX <= restartButtonArea.x + restartButtonArea.w &&
+    mouseY >= restartButtonArea.y &&
+    mouseY <= restartButtonArea.y + restartButtonArea.h
+  ) {
+    resetGame();
+  }
+});
 
 /* ================= 📱 CONTROLES TÁCTILES ================= */
 let startX = 0;
@@ -231,7 +264,20 @@ canvas.addEventListener("touchend", (e) => {
   }
 });
 
-/* reiniciar tocando pantalla */
-canvas.addEventListener("touchstart", () => {
-  if (gameOver) resetGame();
+canvas.addEventListener("touchstart", (e) => {
+  if (!gameOver || !restartButtonArea) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+
+  if (
+    x >= restartButtonArea.x &&
+    x <= restartButtonArea.x + restartButtonArea.w &&
+    y >= restartButtonArea.y &&
+    y <= restartButtonArea.y + restartButtonArea.h
+  ) {
+    resetGame();
+  }
 });

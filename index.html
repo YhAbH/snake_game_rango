@@ -12,6 +12,7 @@
     <h1>🐍 Snake PWA</h1>
     <p>Puntaje: <span id="score">0</span></p>
     <canvas id="game" width="500" height="500"></canvas>
+
     <div class="controls">
       <button id="up">⬆</button>
       <div>
@@ -21,12 +22,6 @@
       </div>
     </div>
 
-    <script src="game.js"></script>
-
-    <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("service-worker.js");
-      }
-    </script>
+    <script src="game.js" defer></script>
   </body>
 </html>
