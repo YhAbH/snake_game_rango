@@ -217,10 +217,6 @@ canvas.addEventListener("click", (e) => {
 let startX = 0;
 let startY = 0;
 
-canvas.addEventListener("touchstart", (e) => {
-  startX = e.touches[0].clientX;
-  startY = e.touches[0].clientY;
-});
 function setDirection(newDx, newDy) {
   if (dx !== -newDx && dy !== -newDy) {
     dx = newDx;
@@ -263,23 +259,28 @@ canvas.addEventListener("touchend", (e) => {
     }
   }
 });
-
 canvas.addEventListener("touchstart", (e) => {
-  if (!gameOver || !restartButtonArea) return;
-
-  const rect = canvas.getBoundingClientRect();
   const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
 
-  // Coordenadas relativas al tamaño interno del canvas
+  // Coordenadas relativas al canvas real
   const touchX = (touch.clientX - rect.left) * (canvas.width / rect.width);
   const touchY = (touch.clientY - rect.top) * (canvas.height / rect.height);
 
-  if (
-    touchX >= restartButtonArea.x &&
-    touchX <= restartButtonArea.x + restartButtonArea.w &&
-    touchY >= restartButtonArea.y &&
-    touchY <= restartButtonArea.y + restartButtonArea.h
-  ) {
-    resetGame();
+  // 🔹 Si el juego terminó y tocó el botón, reiniciamos
+  if (gameOver && restartButtonArea) {
+    if (
+      touchX >= restartButtonArea.x &&
+      touchX <= restartButtonArea.x + restartButtonArea.w &&
+      touchY >= restartButtonArea.y &&
+      touchY <= restartButtonArea.y + restartButtonArea.h
+    ) {
+      resetGame();
+      return; // Salimos para no registrar swipe
+    }
   }
+
+  // 🔹 Si no, registramos inicio del swipe
+  startX = touch.clientX;
+  startY = touch.clientY;
 });
