@@ -155,7 +155,7 @@ function update() {
 /* ================= DRAW ================= */
 function draw() {
   drawBackground();
-  ctx.drawImage(foodImg, food.x * gridSize, food.y * gridSize, 30, 30);
+  ctx.drawImage(foodImg, food.x * gridSize, food.y * gridSize, 35, 35);
   snake.forEach((part, i) => drawSnakePart(part.x, part.y, i));
   if (gameOver) drawGameOverMenu();
 }
@@ -269,14 +269,16 @@ canvas.addEventListener("touchstart", (e) => {
 
   const rect = canvas.getBoundingClientRect();
   const touch = e.touches[0];
-  const x = touch.clientX - rect.left;
-  const y = touch.clientY - rect.top;
+
+  // Coordenadas relativas al tamaño interno del canvas
+  const touchX = (touch.clientX - rect.left) * (canvas.width / rect.width);
+  const touchY = (touch.clientY - rect.top) * (canvas.height / rect.height);
 
   if (
-    x >= restartButtonArea.x &&
-    x <= restartButtonArea.x + restartButtonArea.w &&
-    y >= restartButtonArea.y &&
-    y <= restartButtonArea.y + restartButtonArea.h
+    touchX >= restartButtonArea.x &&
+    touchX <= restartButtonArea.x + restartButtonArea.w &&
+    touchY >= restartButtonArea.y &&
+    touchY <= restartButtonArea.y + restartButtonArea.h
   ) {
     resetGame();
   }
