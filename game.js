@@ -188,6 +188,25 @@ canvas.addEventListener("touchstart", (e) => {
   startX = e.touches[0].clientX;
   startY = e.touches[0].clientY;
 });
+function setDirection(newDx, newDy) {
+  if (dx !== -newDx && dy !== -newDy) {
+    dx = newDx;
+    dy = newDy;
+  }
+}
+
+document
+  .getElementById("up")
+  .addEventListener("click", () => setDirection(0, -1));
+document
+  .getElementById("down")
+  .addEventListener("click", () => setDirection(0, 1));
+document
+  .getElementById("left")
+  .addEventListener("click", () => setDirection(-1, 0));
+document
+  .getElementById("right")
+  .addEventListener("click", () => setDirection(1, 0));
 
 canvas.addEventListener("touchend", (e) => {
   const dxTouch = e.changedTouches[0].clientX - startX;
