@@ -19,15 +19,13 @@ let dx = 1;
 let dy = 0;
 let score = 0;
 let gameOver = false;
-let speed = 10; // velocidad inicial
+let speed = 10;
 
 /* ================= FONDO ARENA ================= */
 function drawBackground() {
-  // Base arena
   ctx.fillStyle = "#d9b46b";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Textura tipo granulado
   for (let i = 0; i < 300; i++) {
     ctx.fillStyle =
       Math.random() > 0.5 ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)";
@@ -42,7 +40,6 @@ function drawBackground() {
     ctx.fill();
   }
 
-  // Cuadros sutiles
   ctx.strokeStyle = "rgba(0,0,0,0.08)";
   for (let i = 0; i < tileCount; i++) {
     for (let j = 0; j < tileCount; j++) {
@@ -50,44 +47,38 @@ function drawBackground() {
     }
   }
 }
+
+/* ================= SNAKE ================= */
 function drawSnakePart(x, y, index) {
   const px = x * gridSize;
   const py = y * gridSize;
   const cx = px + 10;
   const cy = py + 10;
 
-  /* ===== CABEZA ===== */
   if (index === 0 && snakeImg.complete) {
     ctx.drawImage(snakeImg, px - 10, py - 10, 40, 40);
     return;
   }
 
-  /* ===== CUERPO JAKE ===== */
-  ctx.fillStyle = "#d4a437"; // amarillo ocre tipo Jake
+  ctx.fillStyle = "#d4a437";
   ctx.beginPath();
   ctx.arc(cx, cy, 9, 0, Math.PI * 2);
   ctx.fill();
 
-  // sombra volumen
   ctx.fillStyle = "#b8861f";
   ctx.beginPath();
   ctx.arc(cx + 2, cy + 2, 5, 0, Math.PI * 2);
   ctx.fill();
 
-  // borde oscuro separa del fondo
   ctx.strokeStyle = "#5c3d0c";
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  /* ===== COLA MISMO COLOR PERO MÁS OSCURO ===== */
   if (index === snake.length - 1) {
-    ctx.fillStyle = "#a87412"; // mismo tono Jake pero más profundo
+    ctx.fillStyle = "#a87412";
     ctx.beginPath();
     ctx.arc(cx, cy, 6, 0, Math.PI * 2);
     ctx.fill();
-
-    ctx.strokeStyle = "#3e2606";
-    ctx.stroke();
   }
 }
 
@@ -100,15 +91,8 @@ function drawGameOverMenu() {
   ctx.font = "40px Arial";
   ctx.textAlign = "center";
   ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 20);
-
   ctx.font = "20px Arial";
   ctx.fillText("Puntaje: " + score, canvas.width / 2, canvas.height / 2 + 10);
-
-  ctx.fillStyle = "lime";
-  ctx.fillRect(canvas.width / 2 - 60, canvas.height / 2 + 30, 120, 40);
-
-  ctx.fillStyle = "black";
-  ctx.fillText("REINICIAR", canvas.width / 2, canvas.height / 2 + 57);
 }
 
 /* ================= RESET ================= */
@@ -130,8 +114,6 @@ function update() {
   if (head.x === food.x && head.y === food.y) {
     score++;
     scoreEl.textContent = score;
-
-    // 🔥 AUMENTAR VELOCIDAD CADA 5 PUNTOS
     if (score % 5 === 0) speed++;
 
     food = {
@@ -176,10 +158,9 @@ function gameLoop(timestamp) {
   draw();
   requestAnimationFrame(gameLoop);
 }
-
 requestAnimationFrame(gameLoop);
 
-/* ================= CONTROLES ================= */
+/* ================= TECLADO ================= */
 document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowUp" && dy === 0) {
     dx = 0;
@@ -199,6 +180,39 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-canvas.addEventListener("click", () => {
+/* ================= 📱 CONTROLES TÁCTILES ================= */
+let startX = 0;
+let startY = 0;
+
+canvas.addEventListener("touchstart", (e) => {
+  startX = e.touches[0].clientX;
+  startY = e.touches[0].clientY;
+});
+
+canvas.addEventListener("touchend", (e) => {
+  const dxTouch = e.changedTouches[0].clientX - startX;
+  const dyTouch = e.changedTouches[0].clientY - startY;
+
+  if (Math.abs(dxTouch) > Math.abs(dyTouch)) {
+    if (dxTouch > 0 && dx === 0) {
+      dx = 1;
+      dy = 0;
+    } else if (dxTouch < 0 && dx === 0) {
+      dx = -1;
+      dy = 0;
+    }
+  } else {
+    if (dyTouch > 0 && dy === 0) {
+      dx = 0;
+      dy = 1;
+    } else if (dyTouch < 0 && dy === 0) {
+      dx = 0;
+      dy = -1;
+    }
+  }
+});
+
+/* reiniciar tocando pantalla */
+canvas.addEventListener("touchstart", () => {
   if (gameOver) resetGame();
 });
