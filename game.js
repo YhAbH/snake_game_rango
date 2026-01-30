@@ -4,10 +4,10 @@ const scoreEl = document.getElementById("score");
 
 /* ================= IMÁGENES ================= */
 const snakeImg = new Image();
-snakeImg.src = "vibora.png";
+snakeImg.src = "images/vibora.png";
 
 const foodImg = new Image();
-foodImg.src = "Rangooo.png";
+foodImg.src = "images/Rangooo.png";
 
 /* ================= CONFIG ================= */
 const gridSize = 20;
