@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  text-align: center;
+  font-family: Arial, sans-serif;
+
+  /* 🔥 IMAGEN DE FONDO DE TODA LA PÁGINA */
+  background-image: url("images/Fondo.jpg"); /* CAMBIA ESTA IMAGEN CUANDO QUIERAS */
+  background-size: cover; /* que cubra toda la pantalla */
+  background-position: center; /* centrada */
+  background-repeat: no-repeat; /* no se repita */
+  background-attachment: fixed; /* efecto más pro */
+}
+
+h1 {
+  color: white;
+  text-shadow: 2px 2px 5px black;
+}
+
+p {
+  color: white;
+  font-size: 20px;
+  text-shadow: 2px 2px 5px black;
+}
+
+canvas {
+  background: rgba(0, 0, 0, 0.7); /* fondo oscuro del cuadro */
+  border: 4px solid #4caf50;
+  border-radius: 15px;
+  margin-top: 10px;
+  max-width: 95vw;
+  height: auto;
+  touch-action: none; /* para que en celular no haga scroll */
+}
